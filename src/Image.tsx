@@ -10,7 +10,7 @@ import {
   ImageStyle,
   ImageURISource,
   ImageSourcePropType,
-  StyleProp
+  StyleProp,
 } from "react-native";
 import { BlurView } from "expo-blur";
 
@@ -38,12 +38,12 @@ export default class Image extends React.Component<ImageProps, ImageState> {
   static defaultProps = {
     transitionDuration: 300,
     tint: "dark",
-    onError: () => {}
+    onError: () => {},
   };
 
   state = {
     uri: undefined,
-    intensity: new Animated.Value(100)
+    intensity: new Animated.Value(100),
   };
 
   componentDidMount() {
@@ -59,7 +59,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
       Animated.timing(intensity, {
         duration: transitionDuration,
         toValue: 0,
-        useNativeDriver: Platform.OS === "android"
+        useNativeDriver: Platform.OS === "android",
       }).start();
     }
   }
@@ -91,14 +91,16 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     const isImageReady = !!uri;
     const opacity = intensity.interpolate({
       inputRange: [0, 100],
-      outputRange: [0, 0.5]
+      outputRange: [0, 0.5],
     });
     const flattenedStyle = StyleSheet.flatten(style);
     const computedStyle: StyleProp<ImageStyle> = [
       StyleSheet.absoluteFill,
-      _.transform(_.pickBy(flattenedStyle, (_val, key) => propsToCopy.indexOf(key) !== -1), (result, value: any, key) =>
-        Object.assign(result, { [key]: value - (flattenedStyle.borderWidth || 0) })
-      )
+      _.transform(
+        _.pickBy(flattenedStyle, (_val, key) => propsToCopy.indexOf(key) !== -1),
+        (result, value: any, key) => Object.assign(result, { [key]: value - (flattenedStyle.borderWidth || 0) })
+      ),
+      { width: "100%", height: "100%" },
     ];
     return (
       <View {...{ style }}>
@@ -128,6 +130,6 @@ const propsToCopy = [
   "borderBottomLeftRadius",
   "borderBottomRightRadius",
   "borderTopLeftRadius",
-  "borderTopRightRadius"
+  "borderTopRightRadius",
 ];
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
